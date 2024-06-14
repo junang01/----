@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="style.css">
+    <script src="../lib/signage.base.js"></script>
+    <title>키오스크</title>
+</head>
+<body>
+    <header>사용자 키오스크</header> 
+    <div class="panel-container">
+        <div class="panel">
+            <img src="img/drink1.jpg" alt="Panel 1 Image" onclick="orderDrink(1)">
+            <p>음료 1</p>
+        </div>
+        <div class="panel">
+            <img src="img/drink2.jpg" alt="Panel 2 Image" onclick="orderDrink(2)">
+            <p>음료 2</p>
+        </div>
+        <div class="panel">
+            <img src="img/drink3.jpg" alt="Panel 3 Image" onclick="orderDrink(3)">
+            <p>음료 3</p>
+        </div>
+    </div>
+    
+    <button style="display: none" onclick="getTestService()">테스트 버튼</button>
+    <button style="display: none" id='test'>테스트</button>
+</body>
+<script>
+    // javascript here
+    let orderDrink = function(drink){
+        let data = new FormData();
+        data.append("order", drink)
+        POST("order", data, function(resp){ 
+            console.log(resp + ':' + resp.data)
+        });
+    }
+
+    // 테스트 코드, 참고용
+    let getTestService = function(){
+        let data = new FormData(); // 데이터 저장소 생성
+        data.append("name", "kiosk_test") // 데이터 담기 
+        POST("test", data, function(resp){ 
+            // 1. test라는 데이터를 서버단에 실행
+            // 2. data를 담아서 보냄
+            // 3. response 될 때 function 실행
+            console.log(resp + ':' + resp.data)
+            let n = resp.data.output;
+            document.querySelector('#test').innerHTML = n;
+        });
+    }
+</script>
+</html>
