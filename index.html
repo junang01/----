@@ -4,9 +4,41 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Start Page</title>
+    <style>
+        body {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+            background-color: #f0f0f0;
+        }
+        .container {
+            display: flex;
+            gap: 20px; 
+        }
+        .button {
+            width: 150px;
+            height: 150px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            background-color: #4CAF50;
+            color: white;
+            text-decoration: none;
+            font-size: 18px;
+            text-align: center;
+            border-radius: 10px;
+        }
+        .button:hover {
+            background-color: #45a049;
+        }
+    </style>
 </head>
 <body>
-    <a href="./kiosk_page/index.html">사용자 키오스크</a>
-    <a href="./kitch_page/index.html">주방 스크린</a>
+    <div class="container">
+        <a href="./kiosk_page/index.html" class="button">사용자 키오스크</a>
+        <a href="./kitch_page/index.html" class="button">주방 스크린</a>
+    </div>
 </body>
 </html>

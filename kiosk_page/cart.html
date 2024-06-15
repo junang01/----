@@ -1,0 +1,136 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>장바구니</title>
+    <style>
+        body {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            height: 100vh; 
+            margin: 0;
+            background-color: #f0f0f0;
+        }
+        .cart-container {
+            width: 80%;
+            max-width: 600px;
+            margin: 20px;
+            background: #fff;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 0 10px rgba(0,0,0,0.1);
+            position: relative;
+        }
+        .cart-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 10px;
+            margin-bottom: 10px;
+            background-color: #f9f9f9;
+            border-radius: 5px;
+        }
+        .cart-item:nth-child(even) {
+            background-color: #f0f0f0;
+        }
+        .cart-item img {
+            width: 50px;
+            height: 50px;
+            border-radius: 5px;
+        }
+        .quantity-control {
+            display: flex;
+            align-items: center;
+        }
+        .quantity-control button {
+            background-color: #ddd;
+            border: none;
+            padding: 5px 10px;
+            margin: 0 5px;
+            cursor: pointer;
+            border-radius: 5px;
+        }
+        .quantity-control button:hover {
+            background-color: #ccc;
+        }
+        .btn {
+            display: inline-block;
+            padding: 10px 20px;
+            background-color: #4CAF50;
+            color: white;
+            text-decoration: none;
+            text-align: center;
+            border-radius: 5px;
+            margin: 10px 0;
+        }
+        .remove-button {
+            cursor: pointer;
+            color: red;
+            font-weight: bold;
+            margin-left: 10px;
+        }
+        
+    </style>
+</head>
+<body>
+    <div class="cart-container">
+        <h2>장바구니</h2>
+        <div id="cart-items">
+            
+        </div>
+        <a href="payment.html" class="btn">선택 완료</a>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            renderCartItems();
+        });
+    
+        function renderCartItems() {
+            const cartItemsContainer = document.getElementById('cart-items');
+            const selectedItems = JSON.parse(localStorage.getItem('selectedItems')) || {};
+    
+            for (const [itemId, item] of Object.entries(selectedItems)) {
+                cartItemsContainer.innerHTML += `
+                    <div class="cart-item" id="cart-item-${itemId}">
+                        <img src="img/${itemId}.jpg" alt="${item.name}">
+                        <span>${item.name}</span>
+                        <div class="quantity-control">
+                            <button onclick="updateQuantity('${itemId}', -1)">-</button>
+                            <span id="${itemId}-quantity">${item.quantity}</span>
+                            <button onclick="updateQuantity('${itemId}', 1)">+</button>
+                        </div>
+                        <span id="${itemId}-price">${(item.price * item.quantity).toLocaleString()}원</span>
+                        <span class="remove-button" onclick="removeItem('${itemId}')">X</span>
+                    </div>
+                `;
+            }
+        }
+    
+        function updateQuantity(itemId, change) {
+            const quantityElement = document.getElementById(itemId + '-quantity');
+            let quantity = parseInt(quantityElement.innerText) + change;
+            if (quantity < 1) quantity = 1;
+            quantityElement.innerText = quantity;
+    
+            // Update the price
+            const selectedItems = JSON.parse(localStorage.getItem('selectedItems')) || {};
+            selectedItems[itemId].quantity = quantity;
+            document.getElementById(itemId + '-price').innerText = `${(selectedItems[itemId].price * quantity).toLocaleString()}원`;
+            localStorage.setItem('selectedItems', JSON.stringify(selectedItems));
+        }
+    
+        function removeItem(itemId) {
+            const cartItemElement = document.getElementById('cart-item-' + itemId);
+            cartItemElement.parentNode.removeChild(cartItemElement);
+    
+            const selectedItems = JSON.parse(localStorage.getItem('selectedItems')) || {};
+            delete selectedItems[itemId];
+            localStorage.setItem('selectedItems', JSON.stringify(selectedItems));
+        }
+    </script>
+</body>
+</html>

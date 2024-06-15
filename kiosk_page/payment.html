@@ -1,0 +1,133 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>결제</title>
+    <style>
+        body {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: space-between;
+            height: 100vh;
+            margin: 0;
+            background-color: #f0f0f0;
+        }
+        .payment-container {
+            width: 80%;
+            max-width: 600px;
+            background: #fff;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 0 10px rgba(0,0,0,0.1);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+        .order-summary {
+            width: 100%;
+            border-collapse: collapse;
+            margin-bottom: 20px;
+        }
+        .order-summary th, .order-summary td {
+            border: 1px solid #ddd;
+            padding: 10px;
+            text-align: center;
+        }
+        .order-summary th {
+            background-color: #f5f5f5;
+        }
+        .total-row {
+            font-weight: bold;
+        }
+        .btn {
+            display: inline-block;
+            width: 100px;
+            height: 100px;
+            background-color: #4CAF50;
+            color: white;
+            text-decoration: none;
+            text-align: center;
+            border-radius: 5px;
+            line-height: 100px;
+            margin: 10px;
+            cursor: pointer;
+            border: none;
+        }
+        .btn-container {
+            display: flex;
+            justify-content: center;
+            width: 100%;
+            margin-top: auto;
+        }
+    </style>
+</head>
+<body>
+    <div class="payment-container">
+        <h2>결제</h2>
+        <table class="order-summary">
+            <thead>
+                <tr>
+                    <th>주문 내역</th>
+                    <th>수량</th>
+                    <th>금액</th>
+                </tr>
+            </thead>
+            <tbody id="order-items">
+                <!-- Order items will be dynamically added here -->
+            </tbody>
+            <tfoot>
+                <tr class="total-row">
+                    <td>총 결제 금액</td>
+                    <td id="total-count">0개</td>
+                    <td id="total-amount">0원</td>
+                </tr>
+            </tfoot>
+        </table>
+        <div class="btn-container">
+            <button class="btn" onclick="showTotalAmount()">카드 결제</button>
+            <button class="btn" onclick="showTotalAmount()">현금 결제</button>
+        </div>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            renderOrderItems();
+        });
+
+        function renderOrderItems() {
+            const orderItemsContainer = document.getElementById('order-items');
+            const selectedItems = JSON.parse(localStorage.getItem('selectedItems')) || {};
+            let totalAmount = 0;
+            let totalCount = 0;
+
+            console.log('selectedItems:', selectedItems);
+
+            for (const [itemId, item] of Object.entries(selectedItems)) {
+                totalAmount += item.price * item.quantity;
+                totalCount += item.quantity;
+                orderItemsContainer.innerHTML += `
+                    <tr>
+                        <td>${item.name}</td>
+                        <td>${item.quantity}</td>
+                        <td>${(item.price * item.quantity).toLocaleString()}원</td>
+                    </tr>
+                `;
+            }
+
+            document.getElementById('total-count').innerText = `${totalCount}개`;
+            document.getElementById('total-amount').innerText = `${totalAmount.toLocaleString()}원`;
+
+            console.log('Total Count:', totalCount);
+            console.log('Total Amount:', totalAmount);
+        }
+
+        function showTotalAmount() {
+            const totalAmount = document.getElementById('total-amount').innerText;
+            console.log('Total Amount to alert:', totalAmount);
+            alert(`총 결제 금액은 ${totalAmount}입니다. `);
+        }
+    </script>
+</body>
+</html>
