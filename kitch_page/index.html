@@ -3,27 +3,42 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <script src="../lib/signage.base.js"></script>
-    <link rel="stylesheet" href="style.css">
-    <title>주방</title>
+    <title>Manager Page</title>
+    <style>
+        body {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+            background-color: #f0f0f0;
+        }
+        .container {
+            display: flex;
+            gap: 20px; 
+        }
+        .button {
+            width: 150px;
+            height: 150px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            background-color: #4CAF50;
+            color: white;
+            text-decoration: none;
+            font-size: 18px;
+            text-align: center;
+            border-radius: 10px;
+        }
+        .button:hover {
+            background-color: #45a049;
+        }
+    </style>
 </head>
 <body>
-    <header>주방 주문 리스트</header>
-    <div class='panel-container' id="order_list"></div>
+    <div class="container">
+        <a href="packcall.html" class="button">포장 호출</a>
+        <a href="tablemanage.html" class="button">테이블 관리</a>
+    </div>
 </body>
-<script>
-    // javascript
-    let getOrder = function(drink){
-        let data = new FormData();
-        data.append("none", "none");
-        POST("getOrder", data, function(resp){ 
-            // console.log(resp + ':' + resp.data);
-            document.querySelector('#order_list').innerHTML = resp.data.output
-        });
-    }
-
-    setInterval(() => {
-        getOrder();
-    }, 1000);
-</script>
 </html>

@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Packcall Page</title>
+    <style>
+        body {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+            background-color: #f0f0f0;
+        }
+        .callpack-container {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 20px;
+            background: #fff;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 0 10px rgba(0,0,0,0.1);
+        }
+ 
+        .btn-container {
+            display: flex;
+            justify-content: center;
+            width: 100%;
+        }
+        .btn {
+            display: inline-block;
+            width: 100px;
+            height: 50px;
+            background-color: #4CAF50;
+            color: white;
+            text-align: center;
+            border-radius: 5px;
+            margin: 10px;
+            cursor: pointer;
+            border: none;
+        }
+    </style>
+</head>
+<body>
+    <div class="callpack-container">
+        <h2>포장 호출</h2>
+        <table class="packcall">
+            <thead>
+                <tr>
+                    <th>포장번호</th>
+                    <th>메뉴</th>
+                </tr>
+            </thead>
+            <tbody id="order-items">
+            </tbody>   
+        </table>
+        <div class="btn-container">
+            <button class="btn" onclick="call_pack()">호출 하기</button>
+        </div>
+    </div>
+
+    <script>
+        // 후에 함수수정
+         function call_pack() {
+            alert(`호출 했습니다.`);
+        }
+    </script>
+</body>
+</html>
