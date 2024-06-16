@@ -116,7 +116,6 @@
             if (quantity < 1) quantity = 1;
             quantityElement.innerText = quantity;
     
-            // Update the price
             const selectedItems = JSON.parse(localStorage.getItem('selectedItems')) || {};
             selectedItems[itemId].quantity = quantity;
             document.getElementById(itemId + '-price').innerText = `${(selectedItems[itemId].price * quantity).toLocaleString()}원`;

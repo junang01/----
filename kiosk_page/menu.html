@@ -135,7 +135,6 @@
     <div class="menu-container">
         <h2>선택된 메뉴</h2>
         <div class="selected-container" id="selected-items">
-            <!-- Selected items will appear here -->
         </div>
     </div>
 
@@ -146,7 +145,7 @@
 
         function selectItem(itemId, itemName, itemPrice) {
             if (!selectedItems[itemId]) {
-                selectedItems[itemId] = { name: itemName, price: itemPrice, quantity: 0 };
+                selectedItems[itemId] = { name: itemName, price: itemPrice, quantity: 0 ,ordernum:0};
             }
             selectedItems[itemId].quantity += 1;
             renderSelectedItems();

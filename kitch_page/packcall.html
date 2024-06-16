@@ -51,9 +51,10 @@
                 <tr>
                     <th>포장번호</th>
                     <th>메뉴</th>
+                    <th>개수</th>
                 </tr>
             </thead>
-            <tbody id="order-items">
+            <tbody id="packitems">
             </tbody>   
         </table>
         <div class="btn-container">
@@ -62,7 +63,27 @@
     </div>
 
     <script>
-        // 후에 함수수정
+        document.addEventListener('DOMContentLoaded', function() {
+            renderOrderItems();
+        });
+    
+        function renderOrderItems() {
+            const orderItemsContainer = document.getElementById('packitems');
+            const selectedItems = JSON.parse(localStorage.getItem('selectedItems')) || {};
+
+            console.log('selectedItems:', selectedItems);
+
+            for (const [itemId, item] of Object.entries(selectedItems)) {
+                orderItemsContainer.innerHTML += `
+                    <tr>
+                        <td>${item.ordernum}</td>
+                        <td>${item.name}</td>
+                        <td>${item.quantity}</td>
+                    </tr>
+                `;
+            }
+        }
+
          function call_pack() {
             alert(`호출 했습니다.`);
         }

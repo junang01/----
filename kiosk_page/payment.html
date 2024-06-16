@@ -75,7 +75,6 @@
                 </tr>
             </thead>
             <tbody id="order-items">
-                <!-- Order items will be dynamically added here -->
             </tbody>
             <tfoot>
                 <tr class="total-row">
@@ -126,7 +125,17 @@
         function showTotalAmount() {
             const totalAmount = document.getElementById('total-amount').innerText;
             console.log('Total Amount to alert:', totalAmount);
-            alert(`총 결제 금액은 ${totalAmount}입니다. `);
+            alert(`총 결제 금액은 ${totalAmount}입니다.`);
+
+            const selectedItems = JSON.parse(localStorage.getItem('selectedItems')) || {};
+
+            for (const itemId in selectedItems) {
+                if (!selectedItems[itemId].ordernum) {
+                    selectedItems[itemId].ordernum = 0;
+                }
+                selectedItems[itemId].ordernum++;
+            }
+            localStorage.setItem('selectedItems', JSON.stringify(selectedItems));
         }
     </script>
 </body>
