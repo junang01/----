@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>전화번호 입력</title>
+    <style>
+        body {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            height: 100vh;
+            margin: 0;
+            background-color: #f0f0f0;
+        }
+        .container {
+            background: #fff;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 0 10px rgba(0,0,0,0.1);
+            text-align: center;
+        }
+        .input-field {
+            margin-bottom: 10px;
+        }
+        .btn {
+            display: inline-block;
+            padding: 10px 20px; 
+            background-color: #4CAF50;
+            color: white;
+            text-decoration: none;
+            text-align: center;
+            border-radius: 5px;
+            margin: 10px 0;
+            cursor: pointer;
+            border: none;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h2>전화번호 입력</h2>
+        <div class="input-field">
+            <label for="phoneNumber">전화번호:</label>
+            <input type="text" id="phoneNumber" placeholder="전화번호 입력">
+        </div>
+        <button class="btn" onclick="savePhoneNumberAndProceed()">다음</button>
+    </div>
+
+    <script>
+        function savePhoneNumberAndProceed() {
+            const phoneNumber = document.getElementById('phoneNumber').value;
+            localStorage.setItem('phoneNumber', phoneNumber);
+            window.location.href = 'menu.html';
+        }
+    </script>
+</body>
+</html>

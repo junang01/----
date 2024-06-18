@@ -85,8 +85,8 @@
             </tfoot>
         </table>
         <div class="btn-container">
-            <button class="btn" onclick="showTotalAmount()">카드 결제</button>
-            <button class="btn" onclick="showTotalAmount()">현금 결제</button>
+            <button class="btn" onclick="processPayment()">카드 결제</button>
+            <button class="btn" onclick="processPayment()">현금 결제</button>
         </div>
     </div>
 
@@ -100,8 +100,6 @@
             const selectedItems = JSON.parse(localStorage.getItem('selectedItems')) || {};
             let totalAmount = 0;
             let totalCount = 0;
-
-            console.log('selectedItems:', selectedItems);
 
             for (const [itemId, item] of Object.entries(selectedItems)) {
                 totalAmount += item.price * item.quantity;
@@ -117,25 +115,32 @@
 
             document.getElementById('total-count').innerText = `${totalCount}개`;
             document.getElementById('total-amount').innerText = `${totalAmount.toLocaleString()}원`;
-
-            console.log('Total Count:', totalCount);
-            console.log('Total Amount:', totalAmount);
         }
 
-        function showTotalAmount() {
-            const totalAmount = document.getElementById('total-amount').innerText;
-            console.log('Total Amount to alert:', totalAmount);
-            alert(`총 결제 금액은 ${totalAmount}입니다.`);
-
+        function processPayment() {
             const selectedItems = JSON.parse(localStorage.getItem('selectedItems')) || {};
+            const phoneNumber = localStorage.getItem('phoneNumber');
+            const tableNumber = localStorage.getItem('tableNumber');
+            const orders = JSON.parse(localStorage.getItem('orders')) || [];
+            let orderCounter = parseInt(localStorage.getItem('orderCounter')) || 1;
 
-            for (const itemId in selectedItems) {
-                if (!selectedItems[itemId].ordernum) {
-                    selectedItems[itemId].ordernum = 0;
-                }
-                selectedItems[itemId].ordernum++;
+            for (const [itemId, item] of Object.entries(selectedItems)) {
+                orders.push({
+                    orderNumber: orderCounter,
+                    menu: item.name,
+                    quantity: item.quantity,
+                    price: item.price * item.quantity,
+                    phoneNumber: phoneNumber,
+                    tableNumber: tableNumber
+                });
+                orderCounter++;
             }
-            localStorage.setItem('selectedItems', JSON.stringify(selectedItems));
+
+            localStorage.setItem('orders', JSON.stringify(orders));
+            localStorage.setItem('orderCounter', orderCounter);
+            localStorage.removeItem('phoneNumber');
+            localStorage.removeItem('tableNumber');
+            alert('결제가 완료되었습니다.');
         }
     </script>
 </body>

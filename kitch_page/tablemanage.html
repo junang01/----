@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>tablemanage</title>
+    <title>테이블 관리</title>
     <style>
         body {
             display: flex;
@@ -12,6 +12,7 @@
             height: 100vh;
             margin: 0;
             background-color: #f0f0f0;
+            font-family: Arial, sans-serif;
         }
         .table-container {
             display: flex;
@@ -22,11 +23,24 @@
             padding: 20px;
             border-radius: 10px;
             box-shadow: 0 0 10px rgba(0,0,0,0.1);
+            max-width: 800px;
+            width: 100%;
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+        th, td {
+            border: 1px solid #ddd;
+            padding: 12px;
+            text-align: center;
+        }
+        th {
+            background-color: #f4f4f4;
         }
         .btn {
             display: inline-block;
-            width: 100px;
-            height: 50px;
+            padding: 5px 10px;
             background-color: #4CAF50;
             color: white;
             text-align: center;
@@ -34,6 +48,25 @@
             margin: 10px;
             cursor: pointer;
             border: none;
+            text-decoration: none;
+        }
+        .btn-delete {
+            background-color: #f44336;
+        }
+        .btn:hover {
+            background-color: #45a049;
+        }
+        .btn-delete:hover {
+            background-color: #e53935;
+        }
+        .table-number input {
+            width: 60px;
+            padding: 5px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+        }
+        h2 {
+            margin-bottom: 20px;
         }
     </style>
 </head>
@@ -43,22 +76,71 @@
         <table class="packcall">
             <thead>
                 <tr>
-                    <th>대기 번호</th>
+                    <th>주문번호</th>
+                    <th>테이블 번호</th>
                     <th>메뉴</th>
+                    <th>수량</th>
+                    <th>금액</th>
+                    <th>테이블 배치</th>
                 </tr>
             </thead>
             <tbody id="order-items">
-            </tbody>   
+            </tbody>
         </table>
-        <div class="btn-container">
-            <button class="btn" onclick="manage_table()">테이블 배치</button> 
-        </div>
     </div>
 
     <script>
-        //후에 함수 수정
-         function manage_table() {
-            alert(`호출 했습니다.`);
+        document.addEventListener('DOMContentLoaded', function() {
+            renderOrderItems();
+        });
+
+        function renderOrderItems() {
+            const orderItemsContainer = document.getElementById('order-items');
+            const orders = JSON.parse(localStorage.getItem('orders')) || [];
+
+            orderItemsContainer.innerHTML = '';
+
+            orders
+                .filter(order => !order.phoneNumber)
+                .forEach((order, index) => {
+                    orderItemsContainer.innerHTML += `
+                        <tr>
+                            <td>${order.orderNumber}</td>
+                            <td>${order.tableNumber || '미할당'}</td>
+                            <td>${order.menu}</td>
+                            <td>${order.quantity}</td>
+                            <td>${order.price.toLocaleString()}원</td>
+                            <td>
+                                <div class="table-number">
+                                    <input type="number" id="tableNumber-${index}" min="1" max="100" value="${order.tableNumber || ''}">
+                                    <button class="btn" onclick="assignTable(${index})">배치</button>
+                                    <button class="btn btn-delete" onclick="deleteOrder(${index})">완료</button>
+                                </div>
+                            </td>
+                        </tr>
+                    `;
+                });
+        }
+
+        function assignTable(index) {
+            const tableNumber = document.getElementById(`tableNumber-${index}`).value;
+            const orders = JSON.parse(localStorage.getItem('orders')) || [];
+
+            orders[index].tableNumber = tableNumber;
+
+            localStorage.setItem('orders', JSON.stringify(orders));
+            renderOrderItems();
+            alert(`주문 번호 ${orders[index].orderNumber}에 테이블 번호 ${tableNumber}가 할당되었습니다.`);
+        }
+
+        function deleteOrder(index) {
+            const orders = JSON.parse(localStorage.getItem('orders')) || [];
+
+            orders.splice(index, 1); 
+
+            localStorage.setItem('orders', JSON.stringify(orders));
+            renderOrderItems();
+            alert('주문 완료');
         }
     </script>
 </body>

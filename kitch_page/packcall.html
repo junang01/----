@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Packcall Page</title>
+    <title>포장 호출</title>
     <style>
         body {
             display: flex;
@@ -14,20 +14,26 @@
             background-color: #f0f0f0;
         }
         .callpack-container {
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            gap: 20px;
+            width: 80%;
+            max-width: 600px;
+            margin: 20px;
             background: #fff;
             padding: 20px;
             border-radius: 10px;
             box-shadow: 0 0 10px rgba(0,0,0,0.1);
+            position: relative;
         }
- 
-        .btn-container {
-            display: flex;
-            justify-content: center;
+        table {
             width: 100%;
+            border-collapse: collapse;
+        }
+        th, td {
+            border: 1px solid #ddd;
+            padding: 8px;
+            text-align: center;
+        }
+        th {
+            background-color: #f4f4f4;
         }
         .btn {
             display: inline-block;
@@ -51,41 +57,49 @@
                 <tr>
                     <th>포장번호</th>
                     <th>메뉴</th>
-                    <th>개수</th>
+                    <th>수량</th>
+                    <th>전화번호</th>
+                    <th>호출</th>
                 </tr>
             </thead>
             <tbody id="packitems">
-            </tbody>   
+            </tbody>
         </table>
-        <div class="btn-container">
-            <button class="btn" onclick="call_pack()">호출 하기</button>
-        </div>
     </div>
 
     <script>
         document.addEventListener('DOMContentLoaded', function() {
             renderOrderItems();
         });
-    
+
         function renderOrderItems() {
             const orderItemsContainer = document.getElementById('packitems');
-            const selectedItems = JSON.parse(localStorage.getItem('selectedItems')) || {};
+            const orders = JSON.parse(localStorage.getItem('orders')) || [];
 
-            console.log('selectedItems:', selectedItems);
+            orderItemsContainer.innerHTML = ''; 
 
-            for (const [itemId, item] of Object.entries(selectedItems)) {
-                orderItemsContainer.innerHTML += `
-                    <tr>
-                        <td>${item.ordernum}</td>
-                        <td>${item.name}</td>
-                        <td>${item.quantity}</td>
-                    </tr>
-                `;
-            }
+            orders
+                .filter(order => order.phoneNumber) // 전화번호가 null이 아닌 주문만 필터링
+                .forEach((order, index) => {
+                    orderItemsContainer.innerHTML += `
+                        <tr data-index="${index}">
+                            <td>${order.orderNumber}</td>
+                            <td>${order.menu}</td>
+                            <td>${order.quantity}</td>
+                            <td>${order.phoneNumber}</td>
+                            <td><button class="btn" onclick="call_pack(${index})">호출</button></td>
+                        </tr>
+                    `;
+                });
         }
 
-         function call_pack() {
-            alert(`호출 했습니다.`);
+        function call_pack(index) {
+            const orders = JSON.parse(localStorage.getItem('orders')) || [];
+            const phoneNumber = orders[index].phoneNumber;
+            alert(`전화번호 ${phoneNumber}가 호출되었습니다.`);
+            orders.splice(index, 1); 
+            localStorage.setItem('orders', JSON.stringify(orders));
+            renderOrderItems();
         }
     </script>
 </body>
