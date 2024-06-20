@@ -85,8 +85,8 @@
             </tfoot>
         </table>
         <div class="btn-container">
-            <button class="btn" onclick="processPayment()">카드 결제</button>
-            <button class="btn" onclick="processPayment()">현금 결제</button>
+            <button class="btn" onclick="processPayment('card')">카드 결제</button>
+            <button class="btn" onclick="processPayment('cash')">현금 결제</button>
         </div>
     </div>
 
@@ -117,30 +117,45 @@
             document.getElementById('total-amount').innerText = `${totalAmount.toLocaleString()}원`;
         }
 
-        function processPayment() {
+        function processPayment(paymentMethod) {
             const selectedItems = JSON.parse(localStorage.getItem('selectedItems')) || {};
             const phoneNumber = localStorage.getItem('phoneNumber');
             const tableNumber = localStorage.getItem('tableNumber');
-            const orders = JSON.parse(localStorage.getItem('orders')) || [];
-            let orderCounter = parseInt(localStorage.getItem('orderCounter')) || 1;
+            const orderData = {
+                phoneNumber: phoneNumber,
+                tableNumber: tableNumber,
+                items: []
+            };
 
             for (const [itemId, item] of Object.entries(selectedItems)) {
-                orders.push({
-                    orderNumber: orderCounter,
+                orderData.items.push({
                     menu: item.name,
                     quantity: item.quantity,
-                    price: item.price * item.quantity,
-                    phoneNumber: phoneNumber,
-                    tableNumber: tableNumber
+                    price: item.price * item.quantity
                 });
-                orderCounter++;
             }
 
-            localStorage.setItem('orders', JSON.stringify(orders));
-            localStorage.setItem('orderCounter', orderCounter);
-            localStorage.removeItem('phoneNumber');
-            localStorage.removeItem('tableNumber');
-            alert('결제가 완료되었습니다.');
+            fetch('/api/order', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify(orderData)
+            })
+            .then(response => {
+                if (!response.ok) {
+                    throw new Error('주문을 처리할 수 없습니다.');
+                }
+                localStorage.removeItem('selectedItems');
+                localStorage.removeItem('phoneNumber');
+                localStorage.removeItem('tableNumber');
+                alert('결제가 완료되었습니다.');
+                window.location.href = '/Home'; // 홈 페이지로 이동
+            })
+            .catch(error => {
+                console.error('Error:', error);
+                alert('주문을 처리할 수 없습니다.');
+            });
         }
     </script>
 </body>

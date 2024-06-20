@@ -3,18 +3,18 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="stylesheet" href="Home/kiosk_home.css">
+    <link rel="stylesheet" href="./kiosk_home.css">
     <title>키오스크</title>
 </head>
 <body>
     <header>키오스크 시작 화면</header>
     <div class="panel-container">
         <div class="panel">
-            <img src="/img/rice.jpg" alt="매장" onclick="startKiosk(1)">
+            <img src="../img/rice.jpg" alt="매장" onclick="startKiosk(1)">
             <p>매장 식사</p>
         </div>
         <div class="panel">
-            <img src="/img/takeout.jpg" alt="포장" onclick="startKiosk(2)">
+            <img src="../img/takeout.jpg" alt="포장" onclick="startKiosk(2)">
             <p>포장</p>
         </div>
     </div>
@@ -25,9 +25,9 @@
                 checkTableAvailability()
                     .then(isAvailable => {
                         if (isAvailable) {
-                            window.location.href = '/Table/kiosk_table.html';
+                            window.location.href = '../Table/kiosk_table.html';
                         } else {
-                            window.location.href = '/Wait/kiosk_wait.html'; // 테이블이 없으면 대기 페이지로 이동
+                            window.location.href = '../Wait/kiosk_wait.html'; // 테이블이 없으면 대기 페이지로 이동
                         }
                     })
                     .catch(error => {
@@ -35,7 +35,7 @@
                         alert('오류가 발생했습니다. 다시 시도해주세요.');
                     });
             } else if (choice === 2) {
-                window.location.href = '/takeout.html';
+                window.location.href = '../takeout.html';
             }
         }
 
