@@ -22,7 +22,7 @@ function renderSelectedItems() {
     for (const [itemId, item] of Object.entries(selectedItems)) {
         selectedItemsContainer.innerHTML += `
             <div class="selected-item">
-                <img src="/img/${itemId}.jpg" alt="${item.name}">
+                <img src="../img/${itemId}.jpg" alt="${item.name}">
                 <div class="quantity-control">
                     <button onclick="updateQuantity('${itemId}', -1)">-</button>
                     <span>${item.quantity}</span>
