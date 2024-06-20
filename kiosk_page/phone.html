@@ -22,7 +22,16 @@
             text-align: center;
         }
         .input-field {
-            margin-bottom: 10px;
+            margin-bottom: 20px;
+            padding-right: 20px; /* 오른쪽 패딩 추가 */
+        }
+        .input-field input {
+            width: calc(100% - 20px); /* 패딩 고려한 너비 설정 */
+            padding: 10px;
+            font-size: 1.2em;
+            text-align: center;
+            border-radius: 5px;
+            border: 1px solid #ccc;
         }
         .btn {
             display: inline-block;
@@ -36,23 +45,118 @@
             cursor: pointer;
             border: none;
         }
+        .keypad {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 10px;
+            margin-bottom: 20px;
+        }
+        .keypad button {
+            padding: 20px;
+            font-size: 1.5em;
+            background-color: #4CAF50;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: background-color 0.3s;
+        }
+        .keypad button:hover {
+            background-color: #45a049;
+        }
+        .keypad .cancel {
+            grid-column: 3; /* 오른쪽에 위치 */
+            grid-row: 4; /* 세번째 행 */
+        }
+        .keypad .zero {
+            grid-column: 2; /* 중앙 하단에 위치 */
+            grid-row: 4; /* 세번째 행 */
+        }
     </style>
 </head>
 <body>
     <div class="container">
         <h2>전화번호 입력</h2>
         <div class="input-field">
-            <label for="phoneNumber">전화번호:</label>
-            <input type="text" id="phoneNumber" placeholder="전화번호 입력">
+            <!-- JavaScript를 사용하여 기본값 설정 -->
+            <input type="text" id="phoneNumber" readonly>
         </div>
-        <button class="btn" onclick="savePhoneNumberAndProceed()">다음</button>
+        <div class="keypad">
+            <!-- 숫자 패드 버튼 9개와 0 버튼 생성 -->
+            <button onclick="appendNumber(1)">1</button>
+            <button onclick="appendNumber(2)">2</button>
+            <button onclick="appendNumber(3)">3</button>
+            <button onclick="appendNumber(4)">4</button>
+            <button onclick="appendNumber(5)">5</button>
+            <button onclick="appendNumber(6)">6</button>
+            <button onclick="appendNumber(7)">7</button>
+            <button onclick="appendNumber(8)">8</button>
+            <button onclick="appendNumber(9)">9</button>
+            <button class="zero" onclick="appendNumber(0)">0</button>
+            <button class="cancel" onclick="cancelLastDigit()">←</button>
+        </div>
+        <button class="btn" onclick="savePhoneNumberAndProceed()">선택 완료</button>
     </div>
 
     <script>
+        // 페이지 로드 시 기본값으로 "010-" 설정
+        document.addEventListener('DOMContentLoaded', function() {
+            const phoneNumberField = document.getElementById('phoneNumber');
+            phoneNumberField.value = "010-";
+        });
+
+        function appendNumber(number) {
+            const phoneNumberField = document.getElementById('phoneNumber');
+            let currentNumber = phoneNumberField.value;
+
+            // 기본값인 "010-" 이 있는 경우, "-"을 제외하고 숫자를 추가
+            if (currentNumber === "010-") {
+                currentNumber += number;
+            } else {
+                // "-"을 제외한 숫자만 추출하여 저장
+                currentNumber = currentNumber.replace(/-/g, '') + number;
+            }
+
+            const formattedNumber = formatPhoneNumber(currentNumber);
+            phoneNumberField.value = formattedNumber;
+        }
+
+        function formatPhoneNumber(phoneNumber) {
+            if (!phoneNumber) return '';
+
+            // 정규식을 사용하여 전화번호 포맷팅
+            const regex = /^([0-9]{3})([0-9]{1,4})([0-9]{0,4})$/;
+            const match = phoneNumber.match(regex);
+
+            if (match) {
+                // "-" 추가하여 포맷팅된 전화번호 반환
+                return `${match[1]}-${match[2]}${match[3] ? `-${match[3]}` : ''}`;
+            } else {
+                return phoneNumber;
+            }
+        }
+
+        function cancelLastDigit() {
+            const phoneNumberField = document.getElementById('phoneNumber');
+            let currentNumber = phoneNumberField.value;
+
+            if (currentNumber.length > 4) { // 최소 010- 뒤에 한 자리 이상 남아있어야 함
+                currentNumber = currentNumber.slice(0, -1); // 마지막 한 글자 삭제
+                phoneNumberField.value = currentNumber;
+            }
+        }
+
         function savePhoneNumberAndProceed() {
-            const phoneNumber = document.getElementById('phoneNumber').value;
-            localStorage.setItem('phoneNumber', phoneNumber);
-            window.location.href = 'menu.html';
+            const phoneNumber = document.getElementById('phoneNumber').value.replace(/-/g, '');
+            
+            // 전화번호 형식 체크 (010-1234-5678)
+            if (phoneNumber.length === 11) {
+                localStorage.setItem('phoneNumber', phoneNumber);
+                alert('전화번호가 저장되었습니다.');
+                window.location.href = 'menu.html';
+            } else {
+                alert('전화번호를 올바르게 입력해주세요.');
+            }
         }
     </script>
 </body>

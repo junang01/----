@@ -21,39 +21,81 @@
             box-shadow: 0 0 10px rgba(0,0,0,0.1);
             text-align: center;
         }
-        .input-field {
-            margin-bottom: 10px;
+        .table-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 20px; /* 간격을 넓혀줌 */
+        }
+        .table-box {
+            width: 80px;
+            height: 120px; /* 세로로 길게 */
+            line-height: 120px; /* 텍스트 수직 중앙 정렬 */
+            background-color: #4CAF50; /* 초록색: 선택 가능 */
+            color: white;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: background-color 0.3s;
+        }
+        .table-box.disabled {
+            background-color: #ffc107; /* 노란색: 선택 불가능 */
+            cursor: not-allowed;
         }
         .btn {
             display: inline-block;
-            padding: 10px 20px; 
+            padding: 10px 20px;
+            margin-top: 20px;
             background-color: #4CAF50;
             color: white;
-            text-decoration: none;
             text-align: center;
+            text-decoration: none;
             border-radius: 5px;
-            margin: 10px 0;
             cursor: pointer;
-            border: none;
+            transition: background-color 0.3s;
+        }
+        .btn:hover {
+            background-color: #45a049;
         }
     </style>
 </head>
 <body>
     <div class="container">
         <h2>테이블 번호 선택</h2>
-        <div class="input-field">
-            <label for="tableNumber">테이블 번호:</label>
-            <input type="number" id="tableNumber" min="1" max="5" placeholder="테이블 번호 입력">
-        </div>
-        <button class="btn" onclick="saveTableNumberAndProceed()">저장 및 선택 완료</button>
+        <div class="table-grid" id="tableGrid"></div>
+        <a href="#" class="btn" id="selection-complete" onclick="saveSelection()">선택 완료</a>
     </div>
 
     <script>
-        function saveTableNumberAndProceed() {
-            const tableNumber = document.getElementById('tableNumber').value;
-            localStorage.setItem('tableNumber', tableNumber);
-            alert('테이블 선택 완료');
-            window.location.href = 'menu.html';
+        const tableGrid = document.getElementById('tableGrid');
+        let selectedTable = null;
+
+        // 2x3 그리드 생성
+        for (let i = 1; i <= 6; i++) {
+            const tableBox = document.createElement('div');
+            tableBox.classList.add('table-box');
+            tableBox.textContent = i;
+            tableBox.addEventListener('click', () => selectTable(i));
+            tableGrid.appendChild(tableBox);
+        }
+
+        function selectTable(tableNumber) {
+            // 이미 선택된 테이블이 있다면 초기화
+            if (selectedTable) {
+                document.querySelectorAll('.table-box')[selectedTable - 1].classList.remove('disabled');
+            }
+            // 현재 선택된 테이블 저장 및 스타일 업데이트
+            selectedTable = tableNumber;
+            document.querySelectorAll('.table-box')[tableNumber - 1].classList.add('disabled');
+        }
+
+        function saveSelection(event) {
+            if (selectedTable) {
+                localStorage.setItem('tableNumber', selectedTable);
+                alert('테이블 선택 완료');
+                window.location.href = 'menu.html';
+            } else {
+                event.preventDefault();
+                alert('테이블을 선택해주세요.');
+            }
         }
     </script>
 </body>
