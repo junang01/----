@@ -1,0 +1,67 @@
+@font-face {
+    font-family: NG;
+    src: local(※), url(NanumGothic.woff) format("woff");
+}
+
+html, body {
+    padding: 0;
+    margin: 0;
+    width: 100%;
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    background-color: #E1E1E1; /* Body 배경색 설정 */
+    font-family: NG, sans-serif;
+    -webkit-text-size-adjust: none;
+    -webkit-tap-highlight-color: rgba(0, 0, 0, 0);
+    font: normal NG;
+}
+
+a:hover, a:visited, a:link, a:active {
+    text-decoration: none;
+}
+
+header {
+    background-color: #5A5A5A;
+    line-height: 40px;
+    color: white;
+    text-align: center;
+    font-weight: bold;
+    font-size: 23px;
+    width: 100%;
+    max-width: 800px;
+    height: 40px;
+    margin-bottom: 100px; /* 매장 이미지와 헤더와 100px 간격 추가 */
+}
+
+.panel-container {
+    display: flex;
+    flex-direction: column;
+    gap: 100px; /* 이미지와 이미지 사이 간격 줄임 */
+    background-color: #E1E1E1; /* Panel container 배경색 설정 */
+    padding: 20px;
+    border-radius: 10px;
+}
+
+.panel {
+    width: 150px;
+    text-align: center;
+    background-color: transparent; /* Panel 배경색 투명 설정 */
+    border: none; /* 테두리 없앰 */
+    overflow: hidden;
+}
+
+.panel img {
+    width: 100%;
+    height: 150px;
+    display: block;
+    margin-bottom: 5px; /* 이미지와 텍스트 사이 간격 줄임 */
+}
+
+.panel p {
+    background-color: transparent; /* Panel 텍스트 배경색 투명 설정 */
+    color: black;
+    margin: 0;
+    padding: 0;
+}

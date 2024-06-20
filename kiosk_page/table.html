@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="table.css">
+    <title>매장 테이블 선택</title>
+</head>
+<body>
+    <header>매장 테이블 선택</header>
+    <div class="content">
+        <div class="tables">
+            <div class="table-group">
+                <button onclick="selectTable(1)">1번 테이블</button>
+                <button onclick="selectTable(2)">2번 테이블</button>
+                <button onclick="selectTable(3)">3번 테이블</button>
+            </div>
+            <div class="table-group">
+                <button onclick="selectTable(4)">4번 테이블</button>
+                <button onclick="selectTable(5)">5번 테이블</button>
+                <button onclick="selectTable(6)">6번 테이블</button>
+            </div>
+        </div>
+        <p id="selected-table"></p>
+    </div>
+    <script>
+        function selectTable(tableNumber) {
+    // 선택된 테이블의 CSS 클래스를 추가합니다.
+    const buttons = document.querySelectorAll('.table-group button');
+    buttons.forEach(button => {
+        button.classList.remove('selected-table'); // 이전에 선택된 테이블에서 클래스 제거
+    });
+    const selectedButton = document.querySelector(`.table-group button:nth-child(${tableNumber})`);
+    selectedButton.classList.add('selected-table'); // 선택된 테이블에 클래스 추가
+
+    // 선택된 테이블 번호를 표시하고 메뉴 선택 페이지로 이동
+    document.getElementById('selected-table').innerText = `선택된 테이블: ${tableNumber}번`;
+    // 메뉴 선택 페이지로 이동 (메뉴 선택 페이지 URL로 변경)
+    window.location.href = `/menu?table=${tableNumber}`;
+}
+
+    </script>
+</body>
+</html>

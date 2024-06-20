@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="style2.css">
+    <script src="../lib/signage.base.js"></script>
+    <title>키오스크</title>
+</head>
+<body>
+    <header>키오스크 시작 화면</header>
+    <div class="panel-container">
+        <div class="panel">
+            <img src="img/rice.PNG" alt="매장" onclick="startKiosk(1)">
+            <p>매장 식사</p>
+        </div>
+        <div class="panel">
+            <img src="img/takeout.PNG" alt="포장" onclick="startKiosk(2)">
+            <p>포장</p>
+        </div>
+    </div>
+
+    <script>
+        let startKiosk = function(choice) {
+            if (choice === 1) {
+                checkTableAvailability().then(isAvailable => {
+                    if (isAvailable) {
+                        window.location.href = 'table.html';
+                    } else {
+                        window.location.href = 'wait.html';
+                    }
+                });
+            } else if (choice === 2) {
+                window.location.href = 'takeout.html';
+            }
+        }
+
+        async function checkTableAvailability() {
+            // Here you would make a request to your server to check table availability
+            // For demonstration purposes, we'll simulate an API call with a promise that resolves to true/false
+            return new Promise(resolve => {
+                setTimeout(() => {
+                    resolve(false); // Simulate that tables are full
+                }, 1000);
+            });
+        }
+    </script>
+</body>
+</html>
