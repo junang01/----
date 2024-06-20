@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="style2.css">
+    <title>대기 여부 선택</title>
+</head>
+<body>
+    <header>대기 여부 선택</header>
+    <div class="content">
+        <p class="wait-text">대기 인원: <span id="wait-count">0</span>명</p>
+        <input type="text" placeholder="전화번호 입력" class="phone-input">
+        <div class="keypad">
+            <!-- 키패드 버튼들 -->
+            <button onclick="addNumber(1)">1</button>
+            <button onclick="addNumber(2)">2</button>
+            <button onclick="addNumber(3)">3</button>
+            <br>
+            <button onclick="addNumber(4)">4</button>
+            <button onclick="addNumber(5)">5</button>
+            <button onclick="addNumber(6)">6</button>
+            <br>
+            <button onclick="addNumber(7)">7</button>
+            <button onclick="addNumber(8)">8</button>
+            <button onclick="addNumber(9)">9</button>
+            <br>
+            <button class="empty-button" disabled></button> <!-- 공백 버튼 -->
+            <button onclick="addNumber(0)">0</button>
+            <button class="empty-button" disabled></button> <!-- 공백 버튼 -->
+        </div>
+        <button class="wait-button">대기하기</button>
+    </div>
+
+    <script>
+        function addNumber(number) {
+            const phoneInput = document.querySelector('.phone-input');
+            phoneInput.value += number;
+        }
+    </script>
+</body>
+</html>
