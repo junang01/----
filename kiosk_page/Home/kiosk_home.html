@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="Home/kiosk_home.css">
+    <title>키오스크</title>
+</head>
+<body>
+    <header>키오스크 시작 화면</header>
+    <div class="panel-container">
+        <div class="panel">
+            <img src="/img/rice.jpg" alt="매장" onclick="startKiosk(1)">
+            <p>매장 식사</p>
+        </div>
+        <div class="panel">
+            <img src="/img/takeout.jpg" alt="포장" onclick="startKiosk(2)">
+            <p>포장</p>
+        </div>
+    </div>
+
+    <script>
+        const startKiosk = function(choice) {
+            if (choice === 1) {
+                checkTableAvailability()
+                    .then(isAvailable => {
+                        if (isAvailable) {
+                            window.location.href = '/Table/kiosk_table.html';
+                        } else {
+                            window.location.href = '/Wait/kiosk_wait.html'; // 테이블이 없으면 대기 페이지로 이동
+                        }
+                    })
+                    .catch(error => {
+                        console.error('Error:', error);
+                        alert('오류가 발생했습니다. 다시 시도해주세요.');
+                    });
+            } else if (choice === 2) {
+                window.location.href = '/takeout.html';
+            }
+        }
+
+        async function checkTableAvailability() {
+    try {
+        const response = await fetch('/api/tables/available_count');
+        const data = await response.json();
+        return data.availableCount > 0;  // 사용 가능한 테이블이 하나라도 있으면 true 반환
+    } catch (error) {
+        console.error('Error:', error);
+        return false; // 오류 발생 시 테이블이 없다고 가정
+    }
+}
+
+    </script>
+</body>
+</html>

@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html lang="ko">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>대기 테이블 선택</title>
+    <link rel="stylesheet" href="kiosk_wait_table.css">
+</head>
+<body>
+    <div class="container">
+        <h2>대기 테이블 번호 선택</h2>
+        <div class="table-grid" id="tableGrid"></div>
+        <a href="#" class="btn" id="selection-complete" onclick="saveSelection(event)">선택 완료</a>
+    </div>
+
+    <script>
+        const tableGrid = document.getElementById('tableGrid');
+        let selectedTableNumber = null;
+
+        // URL에서 전화번호 가져오기
+        const urlParams = new URLSearchParams(window.location.search);
+        const phoneNumberFromWait = urlParams.get('phoneNumber');
+
+        // API에서 선택된 대기 테이블 번호 가져오기
+        fetch('/api/wait/selected')
+            .then(response => response.json())
+            .then(data => {
+                const selectedWaitTables = data.selectedWaitTables;
+
+                // 2x3 그리드 생성
+                for (let i = 1; i <= 6; i++) {
+                    const tableBox = document.createElement('div');
+                    tableBox.classList.add('table-box');
+                    tableBox.textContent = i;
+
+                    if (selectedWaitTables.includes(i)) {
+                        tableBox.classList.add('selected');
+                    } else {
+                        tableBox.addEventListener('click', () => selectTable(tableBox, i));
+                    }
+
+                    tableGrid.appendChild(tableBox);
+                }
+            })
+            .catch(error => {
+                console.error('Error:', error);
+                alert('테이블 상태를 불러오는 중 오류가 발생했습니다.');
+            });
+
+        function selectTable(element, tableNumber) {
+            // 이전 선택된 테이블 초기화 (스타일 변경 없음)
+            if (selectedTableNumber !== null) {
+                document.querySelector(`.table-box[data-number="${selectedTableNumber}"]`).classList.remove('disabled');
+            }
+            // 현재 선택된 테이블 저장 및 스타일 업데이트
+            selectedTableNumber = tableNumber;
+            element.classList.add('disabled');
+        }
+
+        function saveSelection(event) {
+            if (selectedTableNumber !== null) {
+                let payload = `wait_table=${selectedTableNumber}`;
+                if (phoneNumberFromWait) {
+                    payload += `&phoneNumber=${phoneNumberFromWait}`;
+                }
+
+                fetch('/api/wait_table', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/x-www-form-urlencoded'
+                    },
+                    body: payload
+                })
+                .then(response => response.json())
+                .then(data => {
+                    if (data.success) {
+                        alert('대기 테이블 선택 완료');
+                        window.location.href = '/home';  // 선택 완료 후 홈 페이지로 이동
+                    } else {
+                        alert(data.message || '대기 테이블 선택을 실패했습니다. 다시 시도해 주세요.');
+                    }
+                })
+                .catch(error => {
+                    console.error('Error:', error);
+                    alert('서버와 통신 중 오류가 발생했습니다.');
+                });
+            } else {
+                event.preventDefault();
+                alert('테이블을 선택해주세요.');
+            }
+        }
+    </script>
+</body>
+</html>

@@ -1,0 +1,169 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="kiosk_wait.css"> <title>대기 여부 선택</title>
+    <style>
+        body {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            height: 100vh;
+            margin: 0;
+            background-color: #f0f0f0;
+            font-family: 'Arial', sans-serif;
+        }
+        .container {
+            background: #fff;
+            padding: 30px;
+            border-radius: 10px;
+            box-shadow: 0 0 10px rgba(0,0,0,0.1);
+            text-align: center;
+        }
+        h2 {
+            margin-bottom: 20px; 
+        }
+        .wait-text {
+            font-size: 1.2em;
+            margin-bottom: 20px;
+        }
+        .phone-input {
+            width: calc(100% - 20px); 
+            padding: 10px;
+            font-size: 1.2em;
+            text-align: center;
+            border-radius: 5px;
+            border: 1px solid #ccc;
+            margin-bottom: 20px;
+        }
+        .keypad {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 10px;
+            margin-bottom: 20px;
+        }
+        .keypad button {
+            padding: 20px;
+            font-size: 1.5em;
+            background-color: #4CAF50;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: background-color 0.3s;
+        }
+        .keypad button:hover {
+            background-color: #45a049;
+        }
+        .keypad .empty-button {
+            background-color: #ccc;
+            cursor: default;
+        }
+        .keypad .empty-button:hover {
+            background-color: #ccc; 
+        }
+        .wait-button {
+            padding: 10px 20px; 
+            background-color: #4CAF50;
+            color: white;
+            text-decoration: none;
+            text-align: center;
+            border-radius: 5px;
+            border: none;
+            cursor: pointer;
+            font-size: 1.2em;
+        }
+    </style>
+    </head>
+<body>
+    <div class="container">
+        <h2>대기 여부 선택</h2>
+        <p class="wait-text">대기 인원: <span id="wait-count">0</span>명</p>
+        <input type="text" id="phoneNumber" class="phone-input" readonly>
+        <div class="keypad">
+            <button onclick="appendNumber(1)">1</button>
+            <button onclick="appendNumber(2)">2</button>
+            <button onclick="appendNumber(3)">3</button>
+            <button onclick="appendNumber(4)">4</button>
+            <button onclick="appendNumber(5)">5</button>
+            <button onclick="appendNumber(6)">6</button>
+            <button onclick="appendNumber(7)">7</button>
+            <button onclick="appendNumber(8)">8</button>
+            <button onclick="appendNumber(9)">9</button>
+            <button class="empty-button" disabled></button>
+            <button onclick="appendNumber(0)">0</button>
+            <button class="cancel" onclick="cancelLastDigit()">←</button> 
+        </div>
+        <button class="wait-button" onclick="savePhoneNumberAndProceed()">대기하기</button>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const phoneNumberField = document.getElementById('phoneNumber');
+            phoneNumberField.value = "010-";
+            updateWaitingCount(); // 페이지 로드 시 대기 인원 수 업데이트
+        });
+
+        function appendNumber(number) {
+            const phoneNumberField = document.getElementById('phoneNumber');
+            let currentNumber = phoneNumberField.value;
+
+            if (currentNumber === "010-") {
+                currentNumber += number;
+            } else {
+                currentNumber = currentNumber.replace(/-/g, '') + number;
+            }
+
+            const formattedNumber = formatPhoneNumber(currentNumber);
+            phoneNumberField.value = formattedNumber;
+        }
+
+        function formatPhoneNumber(phoneNumber) {
+            if (!phoneNumber) return '';
+            const regex = /^([0-9]{3})([0-9]{1,4})([0-9]{0,4})$/;
+            const match = phoneNumber.match(regex);
+
+            if (match) {
+                return `${match[1]}-${match[2]}${match[3] ? `-${match[3]}` : ''}`;
+            } else {
+                return phoneNumber;
+            }
+        }
+
+        function cancelLastDigit() {
+            const phoneNumberField = document.getElementById('phoneNumber');
+            let currentNumber = phoneNumberField.value;
+
+            if (currentNumber.length > 4) {
+                currentNumber = currentNumber.slice(0, -1); 
+                phoneNumberField.value = currentNumber;
+            }
+        }
+
+        function savePhoneNumberAndProceed() {
+            const phoneNumber = document.getElementById('phoneNumber').value.replace(/-/g, '');
+
+            if (phoneNumber.length === 11) {
+                // 테이블 선택 페이지로 전화번호를 쿼리 파라미터로 전달
+                window.location.href = `kiosk_wait_table.html?phoneNumber=${phoneNumber}`; 
+            } else {
+                alert('전화번호를 올바르게 입력해주세요.');
+            }
+        }
+
+        function updateWaitingCount() {
+            fetch('/api/wait/count')
+                .then(response => response.json())
+                .then(data => {
+                    document.getElementById('wait-count').innerText = data.count;
+                })
+                .catch(error => {
+                    console.error('Error:', error);
+                });
+        }
+    </script>
+</body>
+</html>

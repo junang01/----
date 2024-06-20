@@ -1,0 +1,49 @@
+/* kiosk_home.css */
+
+body, html {
+    height: 100%;
+    margin: 0;
+    font-family: 'Arial', sans-serif; /* Choose a font you prefer */
+  }
+  
+  header {
+    background-color: #f0f0f0; /* Light gray background */
+    color: #333;
+    text-align: center;
+    padding: 20px 0;
+    font-size: 2.5em; /* Larger header text */
+  }
+  
+  .panel-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: calc(100% - 70px); /* Occupy remaining screen height */
+  }
+  
+  .panel {
+    background-color: white;
+    margin: 0 20px;
+    padding: 30px;
+    border-radius: 10px;
+    box-shadow: 0 4px 8px rgba(0,0,0,0.1); /* Add a subtle shadow */
+    text-align: center;
+    cursor: pointer; /* Indicate that the panel is clickable */
+    transition: transform 0.2s ease; /* Smooth transition for hover effect */
+  }
+  
+  .panel:hover {
+    transform: scale(1.05); /* Slightly enlarge on hover */
+  }
+  
+  .panel img {
+    width: 200px;
+    height: 200px;
+    object-fit: cover; /* Maintain aspect ratio while resizing */
+    border-radius: 10px;
+  }
+  
+  .panel p {
+    margin-top: 15px;
+    font-size: 1.3em;
+  }
